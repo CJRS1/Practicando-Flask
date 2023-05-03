@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block cuerpo %}
+<p>Estos son los alumnos:</p>
+<p>{{ mensaje }} </p>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido Paterno</th>
+            <th scope="col">Apellido Materno</th>
+            <th scope="col">Correo</th>
+            <th scope="col">Numero Emergencia</th>
+            <th scope="col">Curso ID</th>
+        </tr>
+    </thead>
+    {% for alumno in alumnos %}
+    <tbody>
+        <tr>
+            <td scope="row">{{alumno.id}} </td>
+            <td scope="col">{{alumno.nombre}}</td>
+            <td scope="col">{{alumno.ape_paterno}}</td>
+            <td scope="col">{{alumno.ape_materno}}</td>
+            <td scope="col">{{alumno.correo}}</td>
+            <td scope="col">{{alumno.num_emergencia}}</td>
+            <td scope="col">
+                <!-- {% if alumno.curso_id %} 
+                {{alumno.curso_id}}
+                {% else %} -- {% endif %}  -->
+                {{ alumno.curso_id if alumno.curso_id else '--' }}
+            </td>
+
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

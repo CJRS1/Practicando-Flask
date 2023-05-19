@@ -1,0 +1,1 @@
+Para unir el frontend y el backend se crea un enlace y un archivo html, en este archivo html  debe estar dentro de un render_template

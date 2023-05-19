@@ -9,6 +9,7 @@ from models.usuarios import UsuarioModel
 from models.tareas import TareaModel
 from controllers.usuarioController import UsuariosController, UsuarioController
 from controllers.pruebaController import PruebaController
+from controllers.tareaController import TareasController
 
 load_dotenv()
 
@@ -36,8 +37,8 @@ migrate = Migrate(app,conexion)
 #Declararar todas las rutas que vamos a utilizar mediante los controladores
 api.add_resource(UsuariosController,'/usuarios')
 api.add_resource(PruebaController,'/prueba')
-api.add_resource(UsuarioController,'/usuario/<int:id>') #para que se pueda filtrar por id
-
+api.add_resource(UsuarioController,'/usuarios/<int:id>') #para que se pueda filtrar por id
+api.add_resource(TareasController,'/tarea/')
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_mysqldb import MySQL
 from os import environ #libreria propia de python
 from dotenv import load_dotenv
@@ -52,17 +52,21 @@ def devolver_alumnos():
     # }
     return render_template('mostrar_alumnos.html',alumnos=resultado_final,mensaje='Hola desde Flask')
 
-@app.route('/agregar-alumno/',methods=['POST'])
+@app.route('/agregar-alumno/',methods=['GET','POST'])
 def agregar_alumnos():
-    cursor = mysql.connection.cursor()
-    cursor.execute("SELECT*FROM alumnos")
-    resultado = cursor.fetchall() #obtuiene todos los datos que estan en el execute
-
-    # return {
-    #     'message':'Los alumnos son:',
-    #     'content': resultado_final
-    # }
-    return render_template('agregar_alumno.html')
-
+    print(request.method)
+    if request.method == 'GET':
+        return render_template('agregar_alumno.html')
+    elif request.method == 'POST':
+        print(request.data)
+        body = request.get_json()
+        cursor = mysql.connection.cursor()
+        cursor.execute("INSERT INTO alumnos (id, nombre, ape_paterno, ape_materno, correo, num_emergencia) VALUES (DEFAULT, '%s','%s','%s','%s','%s') "% (body.get('nombre'),body.get('ape_paterno'),body.get('ape_materno'),body.get('correo'),body.get('num_emergencia')))
+        mysql.connection.commit()
+        cursor.close()
+        print(body)
+        return{
+            'message':'Alumno agregado exitosamente'
+        }
 
 app.run(debug=True)

@@ -70,16 +70,24 @@ class UsuarioController(Resource):
         }
     def put(self,id):
         try:
-            usuarioEncontrado = conexion.session.query(UsuarioModel).filter(id=id).first()
+            usuarioEncontrado = conexion.session.query(UsuarioModel).filter_by(id=id).first()
             if usuarioEncontrado is None:
                 raise Exception('Usuario no existe')
             body = request.get_json()
             serializador = UsuarioRequestDto()
             data = serializador.load(body)
+            #le damos el valor del telefono anterior
+            telefono = usuarioEncontrado.telefono
+            try:
+                #Si hay un nuevo valor en el telefono entonces cambia sino saldrá error si es null
+                telefono = data['telefono']
+            except:
+                pass
+
 
             usuarioEncontrado.correo = body.get('correo')
             usuarioEncontrado.nombre = body.get('nombre')
-            usuarioEncontrado.telefono = body.get('telefono')
+            usuarioEncontrado.telefono = telefono
 
             conexion.session.commit()
             return{
@@ -91,3 +99,19 @@ class UsuarioController(Resource):
                 'message': 'Error al actualizar usuario',
                 'content':error.args
             }
+    def delete(self,id):
+        try:
+            usuarioEncontrado = conexion.session.query(UsuarioModel).filter_by(id=id).first()
+            if usuarioEncontrado is None:
+                raise Exception('Usuario no existe')
+            conexion.session.delete(usuarioEncontrado)
+            conexion.session.commit()
+            return {
+                'message':'El usuario se elimino exitosamente'
+            }
+        except Exception as error:
+            return{
+                'message':'Error al eliminar el usuario',
+                'content': error.args
+            }
+        
